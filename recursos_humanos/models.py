@@ -10,7 +10,7 @@ class Empleado (models.Model):
     nombre = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=50)
     apellido_materno = models.CharField(max_length=50)
-    fecha_nacimiento = model.DateField()
+    fecha_nacimiento = models.DateField()
     fecha_contratacion = models.DateField()
     foto = models.FileField()
     ciudad = models.CharField(max_length=100)
