@@ -16,9 +16,9 @@ class EmpleadosLista(APIView):
         # Busqueda de empleado por nombre, o apellido
         query = request.GET.get('query')
         if query:
-            empleados = empleados.filter(Q(nombre__icontains=query) | 
-                                         Q(apellido_paterno__icontains=query)|
-                                         Q(apellido_materno__icontains=query))
+            empleados = empleados.filter(Q(nombre__istartswith=query) | 
+                                         Q(apellido_paterno__istartswith=query)|
+                                         Q(apellido_materno__istartswith=query))
 
         paginator = Paginator(empleados,10)
         page_number = request.GET.get('page')
