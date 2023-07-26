@@ -9,10 +9,17 @@ from .serializers import EmpleadoSerializer
 
 class EmpleadosLista(APIView):
     def get(self, request, format=None):
-        empleados = Empleados.objects.all()
+        empleados = Empleado.objects.all()
         serializer = EmpleadoSerializer(empleados)
-
         return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = EmpleadoSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
 
 
 class EmpleadoDetalles(APIView):

@@ -7,15 +7,16 @@ class Planta (models.Model):
 
 class Empleado (models.Model):
     uid = models.CharField(primary_key=True, max_length = 8)
+    planta = models.CharField(max_length=30)
     nombre = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=50)
     apellido_materno = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
     fecha_contratacion = models.DateField()
-    foto = models.FileField()
+    foto = models.FileField(blank = True)
     ciudad = models.CharField(max_length=100)
     estado = models.CharField(max_length=100)
-    codigo_postal = models.CharField(max_length=100)
+    codigo_postal = models.CharField(max_length=5)
     email = models.CharField(max_length=100)
     puesto = models.CharField(max_length=30)
     tel_casa = models.CharField(max_length=100)
