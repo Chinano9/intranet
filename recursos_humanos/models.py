@@ -6,7 +6,6 @@ class Planta (models.Model):
     
 
 class Empleado (models.Model):
-    uid = models.CharField(primary_key=True, max_length = 8)
     planta = models.CharField(max_length=30)
     nombre = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=50)
