@@ -12,3 +12,6 @@ class EmpleadoSerializer (serializers.ModelSerializer):
     def get_antiguedad_dias(self, obj):
         return (now().date() - obj.fecha_contratacion).days
 
+class EmpleadoPaginadoSerializer (serializers.ModelSerializer):
+    class Meta:
+        model: Empleado 

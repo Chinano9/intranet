@@ -6,10 +6,9 @@ class Planta (models.Model):
     
 
 class Empleado (models.Model):
-    planta = models.CharField(max_length=30)
     nombre = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=50)
-    apellido_materno = models.CharField(max_length=50)
+    apellido_materno = models.CharField(blank=True ,max_length=50)
     fecha_nacimiento = models.DateField()
     fecha_contratacion = models.DateField()
     foto = models.FileField(blank = True)
@@ -26,3 +25,7 @@ class Empleado (models.Model):
     sueldo_hora = models.IntegerField(default = 318)
     sueldo_texto = models.CharField(max_length=100)
 
+class Departamento(models.Model):
+    nombre = models.CharField(max_length = 20)
+    jefe = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)

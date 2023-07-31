@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Empleado
 from .serializers import EmpleadoSerializer
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -47,9 +48,9 @@ class EmpleadoDetalles(APIView):
         serializer = EmpleadoSerializer(empleado)
         return Response(serializer.data)
 
-    def put(self, request, pk):
+    def patch(self, request, pk):
         empleado = self.get_object(pk)
-        serializer = EmpleadoSerializer(empleado, data = request.data)
+        serializer = EmpleadoSerializer(empleado, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,3 +60,16 @@ class EmpleadoDetalles(APIView):
         empleado = self.get_object(pk)
         empleado.delete()
         return Response({"status":"200 0K"}, status=status.HTTP_200_OK)
+
+class Auth(APIView):
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })
