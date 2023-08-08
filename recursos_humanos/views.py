@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from django.http import Http404
+from django.http import Http404, FileResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Empleado
@@ -11,8 +11,23 @@ from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-# Create your views here.
+import os
 
+from .utils.documentos import generar_kardex
+
+class DescargarArchivoView(APIView):
+    def get(self, request, pk):
+        # Ruta al archivo que deseas enviar
+
+        archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'utils/out/kardex.pdf'))
+        
+        # Verificar si el archivo existe
+        if os.path.exists(archivo_path):
+            # Enviar el archivo en la respuesta
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
+
+        # Si el archivo no existe, retornar una respuesta de error
+        return Response({'detail': 'El archivo no se encontró.'}, status=404)
 
 class EmpleadoPagination(PageNumberPagination):
     page_size = 10
