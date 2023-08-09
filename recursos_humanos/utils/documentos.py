@@ -1,73 +1,52 @@
+from jinja2 import Template, Environment, FileSystemLoader
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
-def generar_kardex(datos_empleado, nombre_archivo):
-    # Crear un documento PDF
-    doc = SimpleDocTemplate(nombre_archivo, pagesize=letter)
+# Cargar el directorio que contiene las plantillas
+template_loader = FileSystemLoader(searchpath="./templates")
+env = Environment(loader=template_loader)
 
-    # Crear una lista con los datos del empleado
-    data = [
-        ['NUM. de empleado:', str(datos_empleado['id'])],
-        ['Nombre:', datos_empleado['nombre']],
-        ['Apellido Paterno:', datos_empleado['apellido_paterno']],
-        ['Apellido Materno:', datos_empleado['apellido_materno']],
-        ['Fecha de Nacimiento:', datos_empleado['fecha_nacimiento']],
-        ['Fecha de Contratación:', datos_empleado['fecha_contratacion']],
-        ['Ciudad:', datos_empleado['ciudad']],
-        ['Estado:', datos_empleado['estado']],
-        ['Código Postal:', datos_empleado['codigo_postal']],
-        ['Email:', datos_empleado['email']],
-        ['Puesto:', datos_empleado['puesto']],
-        ['Teléfono de Casa:', datos_empleado['tel_casa']],
-        ['Teléfono Celular:', datos_empleado['tel_cel']],
-        ['RFC:', datos_empleado['rfc']],
-        ['Número de Seguro Social:', datos_empleado['seguro_social']],
-        ['CURP:', datos_empleado['curp']],
-        ['Sueldo por Día:', f"${datos_empleado['sueldo_dia']}"],
-        ['Sueldo en Texto:', datos_empleado['sueldo_texto']],
-        ]
+# Cargar la plantilla
+template = env.get_template("kardex.html")
 
-    # Crear una tabla para mostrar los datos
-    table = Table(data, colWidths=[150, 300])
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    ])
-    # Se aplica el estilo a la tabla
-    table.setStyle(style)
+# Datos para rellenar la plantilla (tus datos_empleado aquí)
+datos_empleado = {
+    "id": 5,
+    "antiguedad_dias": 1025,
+    "nombre": "Juanito",
+    "apellido_paterno": "Lopez",
+    "apellido_materno": "Marquez",
+    "fecha_nacimiento": "2000-08-16",
+    "fecha_contratacion": "2020-10-12",
+    "foto": None,
+    "ciudad": "Ciudad del empleado",
+    "estado": "Estado del empleado",
+    "codigo_postal": "72656",
+    "email": "correo@example.com",
+    "puesto": "Puesto del empleado",
+    "tel_casa": "1232123123",
+    "tel_cel": "5637368728",
+    "rfc": "RFC del empleado",
+    "seguro_social": "Número de seguro social del empleado",
+    "curp": "CURP del empleado",
+    "sueldo_dia": 318,
+    "sueldo_texto": "Trescientos dieciocho pesos"
+}
 
-    styles = getSampleStyleSheet()
-    estilo_normal = styles['Normal']
-    estilo_titulo = styles['Heading1']
+# Renderizar la plantilla con los datos
+rendered_template = template.render(datos_empleado=datos_empleado)
 
-    spacer = Spacer(1, 40)
-    
-    empleado_path = "./res/photo_placeholder.png"
-    if datos_empleado['foto'] is not None:
-        empleado_path = datos_empleado['foto']
-    empleado = Image(empleado_path)
-    empleado.drawHeight = 2*inch
-    empleado.drawWidth = 2*inch
+# Crear el archivo PDF
+pdf_filename = "empleado.pdf"
+doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+styles = getSampleStyleSheet()
+content = []
 
-    
-    # Se hace el logo de la empresa
-    logo_path = "./res/gpe_logo_light.png"
-    logo = Image(logo_path)
-    logo.drawHeight = 1.5*inch
-    logo.drawWidth = 1.5*inch
+# Agregar el contenido a la página PDF
+paragraph = Paragraph(rendered_template, style=styles["Normal"])
+content.append(paragraph)
 
-    img_paragraph = Paragraph(f'<img src="{logo_path}" width="80" height="80" valign="middle"/> <h1>Kardex</h1> <img src="{empleado_path}" width="90" height="90" valign="middle"/>', estilo_titulo)
-
-    # Agregamos todo el contenido a una lista
-    content = [img_paragraph,spacer,table] # Insertar la imagen al inicio del contenido
-
-    doc.build(content)
-#
+# Construir el PDF
+doc.build(content)

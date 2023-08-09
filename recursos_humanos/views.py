@@ -13,13 +13,27 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import os
 
-from .utils.documentos import generar_kardex
+#from .utils.documentos import generar_kardex
 
-class DescargarArchivoView(APIView):
-    def get(self, request, pk):
+RUTA_DOCUMENTOS = 'utils/out/'
+
+class KardexView(APIView):
+    def get_object(self, pk):
+        try:
+            return Empleado.objects.get(pk=pk)
+        except Empleado.DoesNotExist:
+            raise Http404
+
+    """def get(self, request, pk):
         # Ruta al archivo que deseas enviar
+        documento = RUTA_DOCUMENTOS+'/kardex.pdf'
+        
+        empleado = self.get_object(pk)
 
-        archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'utils/out/kardex.pdf'))
+        generar_kardex(empleado.__dict__, documento)
+        
+        
+        archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
         
         # Verificar si el archivo existe
         if os.path.exists(archivo_path):
@@ -27,7 +41,16 @@ class DescargarArchivoView(APIView):
             return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
 
         # Si el archivo no existe, retornar una respuesta de error
-        return Response({'detail': 'El archivo no se encontró.'}, status=404)
+        return Response({'detail': 'El archivo no se encontró.'}, status=404)"""
+
+class ContratoView(APIView):
+    pass
+
+class ContratoIndefinidoView(APIView):
+    pass
+
+class GafeteView(APIView):
+    pass
 
 class EmpleadoPagination(PageNumberPagination):
     page_size = 10
