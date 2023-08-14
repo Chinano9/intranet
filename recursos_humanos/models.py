@@ -1,20 +1,28 @@
 from django.db import models
+from django.urls import reverse
+from django.conf import settings
 
 # Create your models here.
 class Planta (models.Model):
     nombre = models.CharField(max_length=20)
     
-
+# TODO: DAR DE ALTA NUEVOS PUESTOS
 class Empleado (models.Model):
     nombre = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=50)
     apellido_materno = models.CharField(blank=True ,max_length=50)
+    # FORMATO DE FECHA DD/MMM/YYYY
     fecha_nacimiento = models.DateField()
     fecha_contratacion = models.DateField()
-    foto = models.FileField(blank = True)
-    ciudad = models.CharField(max_length=100)
-    estado = models.CharField(max_length=100)
+    foto = models.ImageField(upload_to='',blank = True)
+    ciudad_origen = models.CharField(blank=True,max_length=100)
+    estado_origen = models.CharField(blank=True,max_length=100)
+    ciudad_residencia = models.CharField(max_length=100)
+    estado_residencia = models.CharField(max_length=100)
+    num_casa = models.CharField(max_length=10)
     codigo_postal = models.CharField(max_length=5)
+    jefe_directo = models.CharField(blank = True, max_length = 100)
+    estado_civil = models.CharField(blank = True, max_length = 40)
     email = models.CharField(max_length=100)
     puesto = models.CharField(max_length=30)
     tel_casa = models.CharField(blank=True,max_length=100)
@@ -24,6 +32,16 @@ class Empleado (models.Model):
     curp = models.CharField(max_length=100)
     sueldo_dia = models.IntegerField(default = 318)
     sueldo_texto = models.CharField(max_length=100)
+    foto_url = models.CharField(max_length=255, blank=True)  # Campo para almacenar la URL de la foto
+
+    def save(self, *args, **kwargs):
+        if self.foto:
+            self.foto_url = self.get_absolute_url(self.foto)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self, path):
+        base_url = settings.BASE_URL
+        return f"{base_url}fotos/{path}"
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length = 20)

@@ -12,68 +12,99 @@
             padding: 8px;
             text-align: left;
         }
+        header{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        header th, header td{
+            border: none;
+            padding: 8px;
+            text-align: center;
+        }
+        img{
+            width: 100px
+        }
     </style>
 </head>
 <body>
-    <h1>Información del Empleado</h1>
-    <img src="{{ datos_empleado.foto }}" alt="Foto del empleado">
-    <table>
-    <tr>
-        <th>Nombre completo</th>
-        <td>{{ datos_empleado.nombre }} {{ datos_empleado.apellido_paterno }} {{ datos_empleado.apellido_materno }}</td>
-    </tr>
-    <tr>
-        <th>Fecha de nacimiento</th>
-        <td>{{ datos_empleado.fecha_nacimiento }}</td>
-    </tr>
-    <tr>
-        <th>Fecha de contratación</th>
-        <td>{{ datos_empleado.fecha_contratacion }}</td>
-    </tr>
-    <tr>
-        <th>Ciudad</th>
-        <td>{{ datos_empleado.ciudad }}</td>
-    </tr>
-    <tr>
-        <th>Estado</th>
-        <td>{{ datos_empleado.estado }}</td>
-    </tr>
-    <tr>
-        <th>Código Postal</th>
-        <td>{{ datos_empleado.codigo_postal }}</td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td>{{ datos_empleado.email }}</td>
-    </tr>
-    <tr>
-        <th>Teléfono de casa</th>
-        <td>{{ datos_empleado.tel_casa }}</td>
-    </tr>
-    <tr>
-        <th>Teléfono celular</th>
-        <td>{{ datos_empleado.tel_cel }}</td>
-    </tr>
-    <tr>
-        <th>RFC</th>
-        <td>{{ datos_empleado.rfc }}</td>
-    </tr>
-    <tr>
-        <th>Número de Seguro Social</th>
-        <td>{{ datos_empleado.seguro_social }}</td>
-    </tr>
-    <tr>
-        <th>CURP</th>
-        <td>{{ datos_empleado.curp }}</td>
-    </tr>
-    </table>
-
-
-    <h2>Detalles del Empleado</h2>
+    <header>
+        <table>
+            <tr>
+                <td><img src="/home/chinano/Programming/gpe_servers/test_folder/res/gpe_logo_light.png" alt=""></td>
+                <td><h1>Kardex</h1></td>
+                <td><img src="{{ datos_empleado.foto }}" alt="Foto del empleado"></td>
+            </tr>
+        </table> 
+    </header>
     <table>
         <tr>
             <th>ID</th>
             <td>{{ datos_empleado.id }}</td>
+        </tr>
+        <tr>
+            <th>Nombre completo</th>
+            <td>{{ datos_empleado.nombre }} {{ datos_empleado.apellido_paterno }} {{ datos_empleado.apellido_materno }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de nacimiento</th>
+            <td>{{ datos_empleado.fecha_nacimiento }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de contratación</th>
+            <td>{{ datos_empleado.fecha_contratacion }}</td>
+        </tr>
+        <tr>
+            <th>Ciudad de residencia</th>
+            <td>{{ datos_empleado.ciudad_residencia }}</td>
+        </tr>
+        <tr>
+            <th>Estado de residencia</th>
+            <td>{{ datos_empleado.estado_residencia }}</td>
+        </tr>
+        <tr>
+            <th>Nombre de calle</th>
+            <td>{{ datos_empleado.l }}</td>
+        </tr>
+        <tr>
+            <th>Numero de casa</th>
+            <td>{{ datos_empleado.num_casa }}</td>
+        </tr>
+        <tr>
+            <th>Código Postal</th>
+            <td>{{ datos_empleado.codigo_postal }}</td>
+        </tr>
+        <tr>
+            <th>Ciudad de origen</th>
+            <td>{{ datos_empleado.ciudad_origen }}</td>
+        </tr>
+        <tr>
+            <th>Estado de origen</th>
+            <td>{{ datos_empleado.estado_origen }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ datos_empleado.email }}</td>
+        </tr>
+        <tr>
+            <th>Teléfono de casa</th>
+            <td>{{ datos_empleado.tel_casa }}</td>
+        </tr>
+        <tr>
+            <th>Teléfono celular</th>
+            <td>{{ datos_empleado.tel_cel }}</td>
+        </tr>
+        <tr>
+            <th>RFC</th>
+            <td>{{ datos_empleado.rfc }}</td>
+        </tr>
+        <tr>
+            <th>Número de Seguro Social</th>
+            <td>{{ datos_empleado.seguro_social }}</td>
+        </tr>
+        <tr>
+            <th>CURP</th>
+            <td>{{ datos_empleado.curp }}</td>
         </tr>
         <tr>
             <th>Antigüedad (días)</th>
@@ -83,7 +114,6 @@
             <th>Sueldo diario</th>
             <td>${{ datos_empleado.sueldo_dia }}</td>
         </tr>
-        <!-- Agrega más filas aquí para el resto de los detalles -->
     </table>
 </body>
 </html>

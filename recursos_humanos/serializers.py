@@ -15,7 +15,7 @@ class EmpleadoSerializer (serializers.ModelSerializer):
 class EmpleadoPaginadoSerializer (serializers.ModelSerializer):
     class Meta:
         model = Empleado 
-        fields = ['id', 'foto', 'nombre', 'email', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'fecha_contratacion', 'ciudad', 'estado', 'codigo_postal', 'puesto']
+        fields = ['id', 'foto_url', 'nombre', 'email', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'fecha_contratacion', 'ciudad', 'estado', 'codigo_postal', 'puesto']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

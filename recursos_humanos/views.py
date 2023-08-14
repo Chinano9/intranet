@@ -1,3 +1,4 @@
+import django_filters.rest_framework
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import os
 
-#from .utils.documentos import generar_kardex
+from .utils.documentos import generar_kardex, generar_gafete
 
 RUTA_DOCUMENTOS = 'utils/out/'
 
@@ -24,15 +25,17 @@ class KardexView(APIView):
         except Empleado.DoesNotExist:
             raise Http404
 
-    """def get(self, request, pk):
+    def get(self, request, pk):
         # Ruta al archivo que deseas enviar
-        documento = RUTA_DOCUMENTOS+'/kardex.pdf'
+        documento = os.path.abspath(os.path.join(os.path.dirname(__file__),os.path.join(RUTA_DOCUMENTOS,'kardex.pdf')))
         
         empleado = self.get_object(pk)
 
-        generar_kardex(empleado.__dict__, documento)
-        
-        
+        try:
+            generar_kardex(empleado.__dict__, documento)
+        except Exception as e:
+            return Response({'error': f'Error al generar el kardex: {e}'}, status=500)
+
         archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
         
         # Verificar si el archivo existe
@@ -41,15 +44,69 @@ class KardexView(APIView):
             return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
 
         # Si el archivo no existe, retornar una respuesta de error
-        return Response({'detail': 'El archivo no se encontró.'}, status=404)"""
+        return Response({'detail': 'El archivo no se encontró.'}, status=404)
 
 class ContratoView(APIView):
+    def get_object(self, pk):
+        try:
+            return Empleado.objects.get(pk=pk)
+        except Empleado.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        # Ruta al archivo que deseas enviar
+        documento = os.path.abspath(os.path.join(os.path.dirname(__file__),os.path.join(RUTA_DOCUMENTOS,'contrato.pdf')))
+        
+        empleado = self.get_object(pk)
+
+        try:
+            generar_kardex(empleado.__dict__, documento)
+        except Exception as e:
+            return Response({'error': f'Error al generar el contrato: {e}'}, status=500)
+
+        archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
+        
+        # Verificar si el archivo existe
+        if os.path.exists(archivo_path):
+            # Enviar el archivo en la respuesta
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
+
+        # Si el archivo no existe, retornar una respuesta de error
+        return Response({'detail': 'El archivo no se encontró.'}, status=404)
+
     pass
 
 class ContratoIndefinidoView(APIView):
     pass
 
 class GafeteView(APIView):
+    def get_object(self, pk):
+        try:
+            return Empleado.objects.get(pk=pk)
+        except Empleado.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        # Ruta al archivo que deseas enviar
+        documento = os.path.abspath(os.path.join(os.path.dirname(__file__),os.path.join(RUTA_DOCUMENTOS,'gafete.pdf')))
+        
+        empleado = self.get_object(pk)
+
+        try:
+            generar_gafete(empleado.__dict__, documento)
+        except Exception as e:
+            return Response({'error': f'Error al generar el gafete: {e}'}, status=500)
+
+        archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
+        
+        # Verificar si el archivo existe
+        if os.path.exists(archivo_path):
+            # Enviar el archivo en la respuesta
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
+
+        # Si el archivo no existe, retornar una respuesta de error
+        return Response({'detail': 'El archivo no se encontró.'}, status=404)
+
     pass
 
 class EmpleadoPagination(PageNumberPagination):
@@ -76,6 +133,7 @@ class EmpleadosLista(ListAPIView):
     queryset = Empleado.objects.all()
     serializer_class = EmpleadoPaginadoSerializer
     pagination_class = EmpleadoPagination
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     
     def get_queryset(self):
         # Obtenemos el queryset original

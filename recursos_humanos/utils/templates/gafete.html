@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tabla Horizontal</title>
+    <style>
+        @page {
+        size: letter landscape;
+        margin: 2cm;
+        }
+        table {
+            border-collapse: separate;
+            width: 100%;
+        }
+        th, td {
+            border: 3px solid black;
+            padding: 8px;
+            text-align: center;
+            
+        }
+    </style>
+</head>
+<body>
+    <div style="overflow-x: auto;">
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td><img src="/home/chinano/Programming/gpe_servers/test_folder/res/gpe_logo_light.png"alt="Logo GPE Servers"><br> GPE SERVERS</td>
+                            <td><img src={{datos_empleado.foto}} alt="Foto del empleado"></td>
+                        </tr>
+                    </table>
+                    <h1>{{datos_empleado.nombre}} {{datos_empleado.apellido_paterno}} {{datos_empleado.apellido_materno}}</h1>
+                    <br>
+                    Num. de empleado <b>{{datos_empleado.id}}</b>
+                    <br>
+                    I.M.S.S <b>{{datos_empleado.seguro_social}}</b>
+                    <br>
+                    CURP <b>{{datos_empleado.curp}}</b>
+
+                </td>
+                <td>GPE SERVERS
+S. DE R.L. DE C.V.<br>
+GSE170905DE4<br>
+C. Pedro Meneses Hoyos # 8250<br>
+Col. Partido Iglesias C.P. 32528<br>
+Cd. Juárez, Chih. Tel: 656-791-6693
+<b>POLÍTICA DE CALIDAD:</b><br>
+En <b>GPE Servers</b> tenemos como
+compromiso <b>aumentar</b> la satisfacción
+de nuestros clientes, a través de los
+servicios de <b>pintado de piezas</b> para las
+industrias eléctrica, automotriz e
+industria en general, cumpliendo con
+las necesidades de <b>calidad, tiempo de
+    entrega y atención</b>; bajo el contexto
+de mejora contínua de la norma
+internacional <b>ISO 9001-2015</b></td>
+                <td>
+                    <h2>Misión</h2>
+                    <em>Servir con calidad y compromiso</em>
+                    <h2>Visión</h2>
+                    Ser una empresa con Fé, impulsora del buen vivir en nuestras familias y su entorno
+                </td>
+                <td><b><u>NUESTROS VALORES:</u></b><br>
+FÉ = Creo y estoy seguro que DIOS
+existe <br>
+HONESTIDAD = Digo la verdad y
+actúo con justicia <br>
+CONGRUENCIA = Pienso, hablo y
+actúo de acuerdo a mis valores
+RESPETO = Valoro, aprecio y
+tolero a las personas y a mi
+entorno <br>
+EMPATÍA = Me pongo en el lugar
+del otro <br>
+SOLIDARIDAD = Ayudo
+incondicionalmente <br>
+FAMILIA = Formadora de
+personas, base de la sociedad,
+escuela de la vida y del amor</td>
+            </tr>
+            <tr>
+                <td><h3>{{datos_empleado.puesto}}</h3>
+                Descripcion del puesto
+                </td>
+                <td><h2>ALCANCE</h2>
+                    <b>APLICACIÓN DE PINTURA
+ELECTROSTÁTICA EN POLVO Y
+LÍQUIDA EN PIEZAS METÁLICAS Y
+DE DIVERSOS MATERIALES PARA
+LA INDUSTRIA ELÉCTRICA,
+AUTOMOTRIZ E INDUSTRIA EN
+GENERAL.</b></td>
+                <td>Dato 1-3</td>
+                <td>asdasdas</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
