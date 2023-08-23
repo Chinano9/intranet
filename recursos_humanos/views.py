@@ -7,8 +7,8 @@ from rest_framework.pagination import PageNumberPagination
 from django.http import Http404, FileResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Empleado
-from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer
+from .models import Empleado, Puesto
+from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -91,9 +91,22 @@ class GafeteView(APIView):
         documento = os.path.abspath(os.path.join(os.path.dirname(__file__),os.path.join(RUTA_DOCUMENTOS,'gafete.pdf')))
         
         empleado = self.get_object(pk)
+        puesto = empleado.puesto
+
+        datos_empleado = {
+            'foto': empleado.foto,
+            'nombre': empleado.nombre,
+            'apellido_paterno': empleado.apellido_paterno,
+            'apellido_materno': empleado.apellido_materno,
+            'id': empleado.id,
+            'curp': empleado.curp,
+            'seguro_social': empleado.seguro_social,
+            'puesto_nombre': puesto.nombre,
+            'puesto_responsabilidad': puesto.responsabilidad,
+        }
 
         try:
-            generar_gafete(empleado.__dict__, documento)
+            generar_gafete(datos_empleado, documento)
         except Exception as e:
             return Response({'error': f'Error al generar el gafete: {e}'}, status=500)
 
@@ -107,7 +120,6 @@ class GafeteView(APIView):
         # Si el archivo no existe, retornar una respuesta de error
         return Response({'detail': 'El archivo no se encontró.'}, status=404)
 
-    pass
 
 class EmpleadoPagination(PageNumberPagination):
     page_size = 10
@@ -120,6 +132,7 @@ class EmpleadoPagination(PageNumberPagination):
         super().__init__()
 
     def get_paginated_response(self, data):
+        #serializer = EmpleadoPaginadoSerializer(data, many=True)
         return Response({
             'pagina_actual': self.page.number,
             'total_paginas': self.page.paginator.num_pages,
@@ -179,10 +192,12 @@ class EmpleadoCreate(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        #request.data['puesto'] = Puesto
         serializer = EmpleadoSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        print(serializer.errors)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
@@ -209,12 +224,18 @@ class EmpleadoDetalles(APIView):
     def patch(self, request, pk):
         empleado = self.get_object(pk)
         serializer = EmpleadoSerializer(empleado, data = request.data, partial=True)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         empleado = self.get_object(pk)
         empleado.delete()
         return Response({"status":"200 0K"}, status=status.HTTP_200_OK) 
+
+class PuestoLista (ListAPIView):
+    queryset = Puesto.objects.all()
+    serializer_class = PuestoSerializer

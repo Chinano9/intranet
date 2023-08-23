@@ -3,6 +3,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from . import views
 urlpatterns = [
+    path('puestos/', views.PuestoLista.as_view(), name='puestos'),
     path('empleados/', views.EmpleadosLista.as_view(), name='empleados'),
     path('empleados/nuevo/', views.EmpleadoCreate.as_view(), name='crear_empleado'),
     path('empleados/<int:pk>', views.EmpleadoDetalles.as_view(), name='detalles_empleado'),
