@@ -46,7 +46,7 @@ class KardexView(APIView):
         # Si el archivo no existe, retornar una respuesta de error
         return Response({'detail': 'El archivo no se encontró.'}, status=404)
 
-class ContratoView(APIView):
+class ContratoDeterminadoView(APIView):
     def get_object(self, pk):
         try:
             return Empleado.objects.get(pk=pk)
@@ -76,7 +76,7 @@ class ContratoView(APIView):
 
     pass
 
-class ContratoIndefinidoView(APIView):
+class ContratoIndeterminadoView(APIView):
     pass
 
 class GafeteView(APIView):
@@ -94,7 +94,7 @@ class GafeteView(APIView):
         puesto = empleado.puesto
 
         datos_empleado = {
-            'foto': empleado.foto,
+            'foto': empleado.foto.name,
             'nombre': empleado.nombre,
             'apellido_paterno': empleado.apellido_paterno,
             'apellido_materno': empleado.apellido_materno,
@@ -108,6 +108,7 @@ class GafeteView(APIView):
         try:
             generar_gafete(datos_empleado, documento)
         except Exception as e:
+            print(e)
             return Response({'error': f'Error al generar el gafete: {e}'}, status=500)
 
         archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
@@ -115,7 +116,7 @@ class GafeteView(APIView):
         # Verificar si el archivo existe
         if os.path.exists(archivo_path):
             # Enviar el archivo en la respuesta
-            return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True, headers={'Access-Control-Allow-Origin':'*'})
 
         # Si el archivo no existe, retornar una respuesta de error
         return Response({'detail': 'El archivo no se encontró.'}, status=404)
