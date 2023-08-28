@@ -1,0 +1,365 @@
+{
+	"info": {
+		"_postman_id": "40f2a60c-fb1c-4e8b-8274-81ddd81af357",
+		"name": "RRHH",
+		"description": "Seccion de recursos humanos, que conitene todos los datos que necesita este departamento, ya sean datos de empleados, documentos de los mismos, puestos, vacaciones, asistencia, etc.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "18776717-40f2a60c-fb1c-4e8b-8274-81ddd81af357"
+	},
+	"item": [
+		{
+			"name": "Puestos",
+			"item": [
+				{
+					"name": "Lista de puestos",
+					"id": "41749077-42d9-4c24-aff6-fd79da6609be",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}recursos_humanos/puestos/",
+							"host": [
+								"{{url}}recursos_humanos"
+							],
+							"path": [
+								"puestos",
+								""
+							]
+						},
+						"description": "Se listan todos los puestos que existen"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear puesto",
+					"id": "7e035553-5512-4617-a692-b8a152c4f1d7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}recursos_humanos/puestos/",
+							"host": [
+								"{{url}}recursos_humanos"
+							],
+							"path": [
+								"puestos",
+								""
+							]
+						},
+						"description": "Se crea un puesto con los datos necesarios"
+					},
+					"response": []
+				}
+			],
+			"id": "a2dbb31b-9aeb-4585-b168-3d064f43ca93",
+			"description": "Todos los endpoints relacionados a los puestos"
+		},
+		{
+			"name": "Empleados",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Lista de empleados",
+							"id": "48ec2114-4ba5-45a8-85bb-6c47337e5f1b",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										""
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "fer",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "planta",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Lista de todos los empleados, paginada de 10 en 10 empleados. Puede ser cambiado con el parametro page_size"
+							},
+							"response": []
+						},
+						{
+							"name": "Crear empleado",
+							"id": "572af8a3-a4d2-4d12-8e61-23e175c71326",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Juanito\",\n    \"apellido_paterno\": \"Lopez\",\n    \"apellido_materno\": \"Marquez\",\n    \"area_trabajo\": 1,\n    \"fecha_nacimiento\": \"2000-08-16\",\n    \"fecha_contratacion\": \"2020-10-12\",\n    \"ciudad\": \"Ciudad del empleado\",\n    \"estado\": \"Estado del empleado\",\n    \"codigo_postal\": \"78656\",\n    \"email\": \"correo@example.com\",\n    \"puesto\": \"Puesto del empleado\",\n    \"tel_casa\": \"1232123123\",\n    \"tel_cel\": \"5637368728\",\n    \"rfc\": \"RFC del empleado\",\n    \"seguro_social\": \"Número de seguro social del empleado\",\n    \"curp\": \"CURP del empleado\",\n    \"sueldo_hora\": 318,\n    \"sueldo_texto\": \"Trescientos dieciocho pesos\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/nuevo/",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"nuevo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Detalles de empleado",
+							"id": "3de30b8f-dc41-4a14-b3d5-38679e45df85",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/2",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"2"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Se muestran los detalles de un empleado en especifico"
+							},
+							"response": []
+						},
+						{
+							"name": "Borrar empleado",
+							"id": "c8e78960-b78b-4697-88aa-0375d2cadda5",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/7",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar empleado",
+							"id": "40152fd2-60d0-4169-80ee-727774e6ad9d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 28,\n    \"antiguedad_dias\": 1025,\n    \"nombre\": \"Juanito\",\n    \"apellido_paterno\": \"Lopez\",\n    \"apellido_materno\": \"Marquez\",\n    \"fecha_nacimiento\": \"2000-08-16\",\n    \"fecha_contratacion\": \"2020-10-12\",\n    \"ciudad\": \"Ciudad del empleado\",\n    \"estado\": \"Estado del empleado\",\n    \"codigo_postal\": \"72656\",\n    \"email\": \"correo@example.com\",\n    \"puesto\": \"Puesto del empleado\",\n    \"tel_casa\": \"1232123123\",\n    \"tel_cel\": \"5637368728\",\n    \"rfc\": \"RFC del empleado\",\n    \"seguro_social\": \"Número de seguro social del empleado\",\n    \"curp\": \"CURP del empleado\",\n    \"sueldo_dia\": 318,\n    \"sueldo_texto\": \"Trescientos dieciocho pesos\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/28",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"28"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar foto empleado",
+							"id": "b61a8b67-927f-4570-8d89-3757d112989f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{auth_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "foto",
+											"type": "file",
+											"src": "/home/chinano/Downloads/oZGcBDUv_400x400.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/2",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "f9ad1098-60b8-4099-8dd7-491b6a003381",
+					"description": "CRUD de empleados, aqui se pueden ejecutar todas las acciones necesarias de un CRUD"
+				},
+				{
+					"name": "Documentos",
+					"item": [
+						{
+							"name": "Descarga kardex",
+							"id": "58090dc5-ef5b-4a23-a930-b366e4d8bd48",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/documentos/kardex/2",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"documentos",
+										"kardex",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Descarga gafete",
+							"id": "9643b5a1-3799-4d9f-ab7d-4d2cbddf73c5",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/documentos/gafete/2",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"documentos",
+										"gafete",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "fe7cbe00-ec65-4599-9d2c-f7ff7747f978",
+					"description": "Generacion y descarga de documentos de los empleados"
+				}
+			],
+			"id": "ce9c7136-4fce-48cb-ae51-92882b1a4ec8",
+			"description": "Todos los endpoints relacionados a empleados"
+		}
+	]
+}
