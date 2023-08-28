@@ -41,7 +41,7 @@ class KardexView(APIView):
         # Verificar si el archivo existe
         if os.path.exists(archivo_path):
             # Enviar el archivo en la respuesta
-            return FileResponse(open(archivo_path, 'rb'), as_attachment=True)
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True, headers={'Access-Control-Allow-Origin':'*'})
 
         # Si el archivo no existe, retornar una respuesta de error
         return Response({'detail': 'El archivo no se encontró.'}, status=404)

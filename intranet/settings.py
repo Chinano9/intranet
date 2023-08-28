@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'django_extensions',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'intranet.urls'
@@ -120,18 +123,26 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DATETIME_FORMAT': "%d-%b-%Y %H:%M:%S",
-    'DATE_FORMAT': "%d-%b-%Y",
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=8),
 }
 
+# CORS configuration
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:2121",  # Cambia esto por la URL de tu frontend
+]
+
+# Opcional: Si deseas permitir que se incluyan cookies en las solicitudes
+CORS_ALLOW_CREDENTIALS = True
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-mx'
 
 TIME_ZONE = 'UTC'
 

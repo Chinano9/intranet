@@ -1,5 +1,6 @@
 from jinja2 import Template, Environment, FileSystemLoader
 from xhtml2pdf import pisa
+from django.conf import settings
 import os
 import locale
 
@@ -20,6 +21,8 @@ def generar_kardex(datos_empleado, documento):
         # Convertir las fechas en el formato localizado (dd-mmm-aaaa)
     if not datos_empleado['foto']:
         datos_empleado['foto'] = FOTO_PLACEHOLDER
+    else:
+        datos_empleado['foto'] = settings.MEDIA_ROOT + datos_empleado['foto']
 
     # Renderizar la plantilla con los datos
     rendered_template = template.render(datos_empleado=datos_empleado)# Crear el archivo PDF
@@ -37,6 +40,8 @@ def generar_gafete(datos_empleado, documento):
 
     if datos_empleado['foto'] is None:
         datos_empleado['foto'] = FOTO_PLACEHOLDER
+    else:
+        datos_empleado['foto'] = settings.MEDIA_ROOT + datos_empleado['foto']
 
     # Renderizar la plantilla con los datos
     rendered_template = template.render(datos_empleado=datos_empleado)
