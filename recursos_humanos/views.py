@@ -1,4 +1,5 @@
 import django_filters.rest_framework
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +13,7 @@ from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoS
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+import csv
 import os
 
 from .utils.documentos import generar_kardex, generar_gafete
@@ -108,7 +110,7 @@ class GafeteView(APIView):
         try:
             generar_gafete(datos_empleado, documento)
         except Exception as e:
-            print(e)
+            print(f"Error al generar el gafete: {e}")
             return Response({'error': f'Error al generar el gafete: {e}'}, status=500)
 
         archivo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), documento))
@@ -158,9 +160,9 @@ class EmpleadosLista(ListAPIView):
 
         # Si hay un parámetro de búsqueda, filtramos el queryset
         if query:
-            queryset = queryset.filter(Q(nombre__icontains=query) | 
+            queryset = queryset.filter((Q(nombre__icontains=query) | 
                                        Q(apellido_paterno__istartswith=query) |
-                                       Q(apellido_materno__istartswith=query))
+                                       Q(apellido_materno__istartswith=query)))
 
         return queryset
 
@@ -240,3 +242,49 @@ class EmpleadoDetalles(APIView):
 class PuestoLista (ListAPIView):
     queryset = Puesto.objects.all()
     serializer_class = PuestoSerializer
+
+class ExportarEmpleadoView (APIView):
+    def get_object(self, pk):
+        try:
+            return Empleado.objects.get(pk=pk)
+        except Empleado.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        empleado = self.get_object(pk)
+
+        writer = csv.writer(response)
+        writer.writerow(['ID', 'Nombre', 'Apellido', 'Foto URL'])  # Encabezado
+
+        for empleado in empleados:
+            writer.writerow([
+                empleado.id,
+                empleado.nombre,
+                empleado.apellido,
+                empleado.foto_url
+            ])
+
+        response = Response(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="empleados.csv"'
+
+        writer = csv.DictWriter(response, fieldnames=data[0].keys())
+        writer.writerows(data)
+    
+        return 
+        
+
+class ExportarDBView (APIView):
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="empleados.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(["Id","Antiguedad en dias","Nombre","Apellido paterno","Apellido materno","Fecha de nacimiento","Fecha de contratacion","Foto","Ciudad de origen","Estado de origen","Ciudad de residencia","Estado de residencia","Calle","Numero de casa","Codigo postal","Estado civil","Email","Telefono de casa","Telefono celular","RFC","Seguro social","CURP","Sueldo por dia","Sueldo en texto","Foto url","Jefe directo","Puesto"])
+
+        queryset = Empleado.objects.all()
+        serializer = EmpleadoSerializer(queryset, many=True)
+        for empleado_data in serializer.data:
+            writer.writerow(empleado_data.values())
+
+        return response
+    pass

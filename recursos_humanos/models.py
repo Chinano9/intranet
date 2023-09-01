@@ -38,8 +38,11 @@ class Empleado (models.Model):
     foto_url = models.CharField(max_length=255, blank=True)  # Campo para almacenar la URL de la foto
 
     def save(self, *args, **kwargs):
+        # Se crea el url estatico para acceder a la foto del empleado
         if self.foto:
             self.foto_url = self.get_absolute_url(self.foto)
+        # Se coloca en mayusculas el sueldo en texto
+        self.sueldo_texto = self.sueldo_texto.upper()
         super().save(*args, **kwargs)
 
     def get_absolute_url(self, path):

@@ -39,15 +39,16 @@ def generar_kardex(datos_empleado, documento):
 def generar_gafete(datos_empleado, documento):
     template = env.get_template("gafete.html")
 
-    print(datos_empleado)
     if not datos_empleado['foto']:
         datos_empleado['foto'] = FOTO_PLACEHOLDER
     else:
         datos_empleado['foto'] = settings.MEDIA_ROOT + datos_empleado['foto']
 
+
+    print(datos_empleado)
+
     # Renderizar la plantilla con los datos
     rendered_template = template.render(datos_empleado=datos_empleado)
-
     # Crear el archivo PDF
     with open(documento, "w+b") as pdf_file:
         pisa_status = pisa.CreatePDF(rendered_template, dest=pdf_file, pagesize=(612, 792), orientation='landscape')
@@ -55,4 +56,5 @@ def generar_gafete(datos_empleado, documento):
         if not pisa_status.err:
             print("PDF generado correctamente.")
         else:
+            print(f"error al generar el pdf, {pisa_status.err}")
             raise Exception("Ocurrió un error al generar el PDF:", pisa_status.err)
