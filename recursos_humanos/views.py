@@ -1,4 +1,5 @@
 import django_filters.rest_framework
+from rest_framework.filters import SearchFilter
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,10 +7,11 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from django.http import Http404, FileResponse
-from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Empleado, Puesto
 from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
+from .paginators import EmpleadoPagination
+from .filters import EmpleadoFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -124,86 +126,48 @@ class GafeteView(APIView):
         return Response({'detail': 'El archivo no se encontró.'}, status=404)
 
 
-class EmpleadoPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 100
-
-    def __init__(self):
-        # Agrega una variable para almacenar el parámetro de búsqueda
-        self.query = None
-        super().__init__()
-
-    def get_paginated_response(self, data):
-        #serializer = EmpleadoPaginadoSerializer(data, many=True)
-        return Response({
-            'pagina_actual': self.page.number,
-            'total_paginas': self.page.paginator.num_pages,
-            'total_empleados': self.page.paginator.count,
-            'next': self.page.number + 1 if (self.page.number + 1) <= self.page.paginator.num_pages else None,
-            'prev': self.page.number - 1,
-            'results': data,
-        })
-
 class EmpleadosLista(ListAPIView):
     queryset = Empleado.objects.all()
-    serializer_class = EmpleadoPaginadoSerializer
+    serializer_class = EmpleadoSerializer
     pagination_class = EmpleadoPagination
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
-    
-    def get_queryset(self):
-        # Obtenemos el queryset original
-        queryset = super().get_queryset()
-
-        # Obtenemos el parámetro de búsqueda 'query' de la URL
+    filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = EmpleadoFilter
+    search_fields = ['nombre', 'apellido_paterno', 'apellido_materno']
+    """def get_queryset(self):
         query = self.request.GET.get('query')
-
-        # Si hay un parámetro de búsqueda, filtramos el queryset
         if query:
-            queryset = queryset.filter((Q(nombre__icontains=query) | 
-                                       Q(apellido_paterno__istartswith=query) |
-                                       Q(apellido_materno__istartswith=query)))
-
-        return queryset
-
-    def get(self, request, format=None):
-        # Obtenemos el queryset filtrado y paginado
-        queryset = self.get_queryset()
-        page_data = self.paginate_queryset(queryset)
-        serializer = EmpleadoSerializer(page_data, many=True)
-        return self.get_paginated_response(serializer.data)
+            queryset = self.queryset.filter(
+                Q(nombre__icontains=query) |
+                Q(apellido_paterno__istartswith=query) |
+                Q(apellido_materno__istartswith=query)
+            )
+            return queryset
+        return self.queryset"""
 
 
 class EmpleadoCreate(APIView):
-#    authentication_classes = [JWTAuthentication]
-#    permission_classes = [IsAuthenticated]
-
     def get(self, request, format=None):
+        query = request.GET.get('query')
         empleados = Empleado.objects.all()
 
-        # Busqueda de empleado por nombre, o apellido
-        query = request.GET.get('query')
         if query:
-            empleados = empleados.filter(Q(nombre__istartswith=query) | 
-                                         Q(apellido_paterno__istartswith=query)|
-                                         Q(apellido_materno__istartswith=query))
+            empleados = empleados.filter(
+                Q(nombre__istartswith=query) |
+                Q(apellido_paterno__istartswith=query) |
+                Q(apellido_materno__istartswith=query)
+            )
 
-        paginator = Paginator(empleados,10)
-        page_number = request.GET.get('page')
-        page_data = paginator.get_page(page_number)
+        paginator = EmpleadoPagination()
+        page_data = paginator.paginate_queryset(empleados, request)
         serializer = EmpleadoSerializer(page_data, many=True)
-        return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request, format=None):
-        #request.data['puesto'] = Puesto
-        serializer = EmpleadoSerializer(data = request.data)
+        serializer = EmpleadoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        print(serializer.errors)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EmpleadoDetalles(APIView):
     def get_object(self, pk):
@@ -218,26 +182,24 @@ class EmpleadoDetalles(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = EmpleadoSerializer(data = request.data)
+        serializer = EmpleadoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, pk):
         empleado = self.get_object(pk)
-        serializer = EmpleadoSerializer(empleado, data = request.data, partial=True)
-        print(request.data)
+        serializer = EmpleadoSerializer(empleado, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         empleado = self.get_object(pk)
         empleado.delete()
-        return Response({"status":"200 0K"}, status=status.HTTP_200_OK) 
+        return Response({"status": "200 OK"}, status=status.HTTP_204_NO_CONTENT)
 
 class PuestoLista (ListAPIView):
     queryset = Puesto.objects.all()
@@ -252,25 +214,16 @@ class ExportarEmpleadoView (APIView):
 
     def get(self, request, pk):
         empleado = self.get_object(pk)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{empleado.nombre}_{empleado.apellido_paterno}.csv"'
 
         writer = csv.writer(response)
-        writer.writerow(['ID', 'Nombre', 'Apellido', 'Foto URL'])  # Encabezado
+        writer.writerow(["Id","Antiguedad en dias","Nombre","Apellido paterno","Apellido materno","Fecha de nacimiento","Fecha de contratacion","Foto","Ciudad de origen","Estado de origen","Ciudad de residencia","Estado de residencia","Calle","Numero de casa","Codigo postal","Estado civil","Email","Telefono de casa","Telefono celular","RFC","Seguro social","CURP","Sueldo por dia","Sueldo en texto","Foto url","Jefe directo","Puesto"])
 
-        for empleado in empleados:
-            writer.writerow([
-                empleado.id,
-                empleado.nombre,
-                empleado.apellido,
-                empleado.foto_url
-            ])
+        serializer = EmpleadoSerializer(empleado)
+        writer.writerow(serializer.data.values())
 
-        response = Response(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="empleados.csv"'
-
-        writer = csv.DictWriter(response, fieldnames=data[0].keys())
-        writer.writerows(data)
-    
-        return 
+        return response
         
 
 class ExportarDBView (APIView):
@@ -285,6 +238,7 @@ class ExportarDBView (APIView):
         serializer = EmpleadoSerializer(queryset, many=True)
         for empleado_data in serializer.data:
             writer.writerow(empleado_data.values())
+             
 
         return response
     pass

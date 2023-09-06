@@ -12,7 +12,7 @@ urlpatterns = [
     path('empleados/documentos/contrato_indeterminado/<int:pk>', views.ContratoIndeterminadoView.as_view(), name='descargar_contrato_indeterminado'),
     path('empleados/documentos/gafete/<int:pk>', views.GafeteView.as_view(), name='descargar_gafete'),
     path('empleados/documentos/exportar_csv/<int:pk>', views.ExportarEmpleadoView.as_view(), name='exportar_csv_empleado'),
-    path('empleados/exportar_csv/', views.ExportarDBView.as_view(), name='exportar_csv'),
+    path('empleados/documentos/exportar_csv/', views.ExportarDBView.as_view(), name='exportar_csv'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # URL para obtener el token
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # URL para refrescar el token
 ]
