@@ -83,7 +83,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}recursos_humanos/empleados/",
+									"raw": "{{url}}recursos_humanos/empleados/?ordering=fecha_contratacion",
 									"host": [
 										"{{url}}recursos_humanos"
 									],
@@ -93,8 +93,9 @@
 									],
 									"query": [
 										{
-											"key": "query",
+											"key": "search",
 											"value": "fer",
+											"description": "Busqueda por nombre, apellido paterno o materno",
 											"disabled": true
 										},
 										{
@@ -103,10 +104,27 @@
 											"disabled": true
 										},
 										{
-											"key": "planta",
-											"value": "",
+											"key": "puesto__id",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "fecha_contratacion__gte",
+											"value": "2020-10-12",
+											"description": "Fecha de contratacion inicial, desde la que se quiere hacer la busqueda; ejemplo: Empleados contratados despues de [2022-01-13]",
+											"disabled": true
+										},
+										{
+											"key": "fecha_contratacion__lte",
+											"value": null,
+											"description": "Fecha de contratacion final, hasta la que se quiere hacer la busqueda",
 											"type": "text",
 											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "fecha_contratacion",
+											"type": "text"
 										}
 									]
 								},
@@ -126,12 +144,13 @@
 									{
 										"key": "Authorization",
 										"value": "{{auth_token}}",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"nombre\": \"Juanito\",\n    \"apellido_paterno\": \"Lopez\",\n    \"apellido_materno\": \"Marquez\",\n    \"area_trabajo\": 1,\n    \"fecha_nacimiento\": \"2000-08-16\",\n    \"fecha_contratacion\": \"2020-10-12\",\n    \"ciudad\": \"Ciudad del empleado\",\n    \"estado\": \"Estado del empleado\",\n    \"codigo_postal\": \"78656\",\n    \"email\": \"correo@example.com\",\n    \"puesto\": \"Puesto del empleado\",\n    \"tel_casa\": \"1232123123\",\n    \"tel_cel\": \"5637368728\",\n    \"rfc\": \"RFC del empleado\",\n    \"seguro_social\": \"Número de seguro social del empleado\",\n    \"curp\": \"CURP del empleado\",\n    \"sueldo_hora\": 318,\n    \"sueldo_texto\": \"Trescientos dieciocho pesos\"\n}\n",
+									"raw": "{\n    \"nombre\": \"Juanito\",\n    \"apellido_paterno\": \"Lopez\",\n    \"apellido_materno\": \"Marquez\",\n    \"area_trabajo\": 1,\n    \"fecha_nacimiento\": \"2000-08-16\",\n    \"fecha_contratacion\": \"2020-10-12\",\n    \"ciudad_residencia\": \"ASDASDA\",\n    \"estado_residencia\": \"Casdas\",\n    \"calle\": \"ASDasdasdasda\",\n    \"num_casa\": \"M\",\n    \"puesto\": 3,\n    \"codigo_postal\": \"78656\",\n    \"email\": \"correo@example.com\",\n    \"tel_casa\": \"1232123123\",\n    \"tel_cel\": \"5637368728\",\n    \"rfc\": \"RFC del empleado\",\n    \"seguro_social\": \"Número de seguro social del empleado\",\n    \"curp\": \"CURP del empleado\",\n    \"sueldo_hora\": 318,\n    \"sueldo_texto\": \"Trescientos dieciocho pesos\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -172,13 +191,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}recursos_humanos/empleados/2",
+									"raw": "{{url}}recursos_humanos/empleados/4",
 									"host": [
 										"{{url}}recursos_humanos"
 									],
 									"path": [
 										"empleados",
-										"2"
+										"4"
 									],
 									"query": [
 										{
@@ -281,7 +300,7 @@
 										{
 											"key": "foto",
 											"type": "file",
-											"src": "/home/chinano/Downloads/oZGcBDUv_400x400.jpg"
+											"src": "/home/chinano/Downloads/vicky-hladynets-pq918sjh894-unsplash.jpg"
 										}
 									]
 								},
@@ -348,6 +367,54 @@
 										"documentos",
 										"gafete",
 										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Descargar CSV empleado",
+							"id": "26e374c3-314d-46c6-86c1-f4904600bdd3",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/documentos/exportar_csv/6",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"documentos",
+										"exportar_csv",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Descargar CSV",
+							"id": "b5a6c2c6-901a-41e4-95ae-bea99335be72",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}recursos_humanos/empleados/documentos/exportar_csv/",
+									"host": [
+										"{{url}}recursos_humanos"
+									],
+									"path": [
+										"empleados",
+										"documentos",
+										"exportar_csv",
+										""
 									]
 								}
 							},
