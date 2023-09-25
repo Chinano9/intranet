@@ -15,7 +15,8 @@ template_loader = FileSystemLoader(searchpath= os.path.join(BASE_DIR, 'templates
 env = Environment(loader=template_loader)
 
 @formato_local
-def generar_kardex(datos_empleado, documento):
+def generar_kardex(datos_empleado:dict, documento:str) -> None:
+    """Genera el documento del kardex del empleado usando la libreria xhtml2pdf"""
     template =env.get_template("kardex.html")
 
         # Convertir las fechas en el formato localizado (dd-mmm-aaaa)
@@ -33,10 +34,11 @@ def generar_kardex(datos_empleado, documento):
         if not pisa_status.err:
             print("PDF generado correctamente.")
         else:
+            print(f"error al generar el pdf, {pisa_status.err}")
             raise Exception("Ocurrió un error al generar el PDF:", pisa_status.err)
 
 
-def generar_gafete(datos_empleado, documento):
+def generar_gafete(datos_empleado:dict, documento:str) -> None:
     template = env.get_template("gafete.html")
 
     if not datos_empleado['foto']:

@@ -19,7 +19,11 @@ class EmpleadoSerializer (serializers.ModelSerializer):
 
 
 class EmpleadoPaginadoSerializer(serializers.ModelSerializer):
-
+    puesto = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='nombre'
+     )    
     class Meta:
         model = Empleado 
         fields = ['id', 'foto_url', 'nombre', 'email', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'fecha_contratacion', 'ciudad_residencia', 'estado_residencia', 'codigo_postal', 'puesto']

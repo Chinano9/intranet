@@ -13,10 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_URL = 'http://localhost:8000/'
-MEDIA_URL = '/fotos/'
+BASE_URL = os.getenv('API_BASE_URL')
+MEDIA_URL = '/api/fotos/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'fotos/')
 
 
@@ -24,12 +27,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'fotos/')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@resqex@db=i2lbo6gg410lxftfb1-(ao0sl1v#fbqeav#a&h3'
+SECRET_KEY = os.getenv('API_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -122,6 +125,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'SECRET_KEY': SECRET_KEY,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 

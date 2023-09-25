@@ -1,5 +1,5 @@
 import django_filters.rest_framework
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,10 +8,6 @@ from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from django.http import Http404, FileResponse
 from django.db.models import Q
-from .models import Empleado, Puesto
-from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
-from .paginators import EmpleadoPagination
-from .filters import EmpleadoFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -19,6 +15,10 @@ import csv
 import os
 
 from .utils.documentos import generar_kardex, generar_gafete
+from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
+from .paginators import EmpleadoPagination
+from .filters import EmpleadoFilter
+from .models import Empleado, Puesto
 
 RUTA_DOCUMENTOS = 'utils/out/'
 
@@ -130,9 +130,11 @@ class EmpleadosLista(ListAPIView):
     queryset = Empleado.objects.all()
     serializer_class = EmpleadoSerializer
     pagination_class = EmpleadoPagination
-    filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
+    filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend, OrderingFilter]
     filterset_class = EmpleadoFilter
     search_fields = ['nombre', 'apellido_paterno', 'apellido_materno']
+    ordering_fields = ['nombre', 'apellido_paterno', 'apellido_materno', 'fecha_contratacion', 'fecha_nacimiento']
+    ordering = ['-fecha_contratacion']
     """def get_queryset(self):
         query = self.request.GET.get('query')
         if query:
@@ -201,10 +203,6 @@ class EmpleadoDetalles(APIView):
         empleado.delete()
         return Response({"status": "200 OK"}, status=status.HTTP_204_NO_CONTENT)
 
-class PuestoLista (ListAPIView):
-    queryset = Puesto.objects.all()
-    serializer_class = PuestoSerializer
-
 class ExportarEmpleadoView (APIView):
     def get_object(self, pk):
         try:
@@ -242,3 +240,44 @@ class ExportarDBView (APIView):
 
         return response
     pass
+
+class PuestoLista (ListAPIView):
+    queryset = Puesto.objects.all()
+    serializer_class = PuestoSerializer
+    pagination_class = EmpleadoPagination
+    filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend, OrderingFilter]
+    search_fields = ['nombre']
+
+
+class PuestoCreate (APIView):
+    def post(self, request, format=None):
+        serializer = PuestoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PuestoDetalles(APIView):
+    def get_object(self, pk):
+        try:
+            return Puesto.objects.get(pk=pk)
+        except Puesto.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        puesto = self.get_object(pk)
+        serializer = PuestoSerializer(puesto)
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        puesto = self.get_object(pk)
+        serializer = PuestoSerializer(puesto, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        empleado = self.get_object(pk)
+        empleado.delete()
+        return Response({"status": "200 OK"}, status=status.HTTP_204_NO_CONTENT)

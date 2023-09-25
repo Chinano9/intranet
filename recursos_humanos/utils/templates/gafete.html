@@ -17,6 +17,17 @@
             text-align: center;
             
         }
+        h4{
+            background-color: red;
+            font-size: 50px;
+            padding-bottom:0;
+            color: white;
+            border: 2px solid black;
+
+        }
+        h5{
+            font-size: 22px
+        }
     </style>
 </head>
 <body>
@@ -31,7 +42,7 @@
                         </tr>
                     </table>
                     <h1>{{datos_empleado.nombre}} {{datos_empleado.apellido_paterno}} {{datos_empleado.apellido_materno}}</h1>
-                    <br>
+                    
                     Num. de empleado <b>{{datos_empleado.id}}</b>
                     <br>
                     I.M.S.S <b>{{datos_empleado.seguro_social}}</b>
@@ -83,6 +94,8 @@ escuela de la vida y del amor</td>
             <tr>
                 <td><h3>{{datos_empleado.puesto_nombre}}</h3>
                     {{datos_empleado.puesto_responsabilidad}}
+                    <br>REFERIRSE AL REGISTRO DESCRIPCION DE PUESTO Y FUNCIONES
+                    <br><b>0712-00-04-R</b>
                 </td>
                 <td><h2>ALCANCE</h2>
                     <b>APLICACIÓN DE PINTURA
@@ -93,17 +106,17 @@ LA INDUSTRIA ELÉCTRICA,
 AUTOMOTRIZ E INDUSTRIA EN
 GENERAL.</b></td>
                 <td>
-                    <h3>Peligro</h3>
+                     <h4>Peligro</h3>
+
+                    <h5>NO OPERAR</h4>
+
+                    <h5>FUERA DE SERVICIO</h4>
+                 </td>
+                <td>
+                    <h4>Peligro</h3>
                     ESTE EQUIPO / INSTALACION <b>NO</b> SE ENCUENTRA EN OPTIMAS CONDICIONES PARA LABORAR. <br>
                     ESTA TARJETA SOLO PUEDE SER REMOVIDA POR:<br>
-                    <em>{{datos_empleado.nombre}} {{datos_empleado.apellido_paterno}} {{datos_empleado.apellido_materno}}</em>
-                </td>
-                <td>
-                    <h3>Peligro</h3>
-
-                    <h4>NO OPERAR</h4>
-
-                    <h4>FUERA DE SERVICIO</h4>
+                    <u><b><em>{{datos_empleado.nombre}} {{datos_empleado.apellido_paterno}} {{datos_empleado.apellido_materno}}</em></b></u>
                 </td>
             </tr>
         </table>
