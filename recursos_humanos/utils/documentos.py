@@ -25,7 +25,6 @@ def generar_kardex(datos_empleado:dict, documento:str) -> None:
     else:
         datos_empleado['foto'] = settings.MEDIA_ROOT + datos_empleado['foto']
 
-    print(datos_empleado)
     # Renderizar la plantilla con los datos
     rendered_template = template.render(datos_empleado=datos_empleado)# Crear el archivo PDF
     with open(documento, "w+b") as pdf_file:
@@ -47,7 +46,6 @@ def generar_gafete(datos_empleado:dict, documento:str) -> None:
         datos_empleado['foto'] = settings.MEDIA_ROOT + datos_empleado['foto']
 
 
-    print(datos_empleado)
 
     # Renderizar la plantilla con los datos
     rendered_template = template.render(datos_empleado=datos_empleado)

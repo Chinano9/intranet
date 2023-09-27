@@ -16,7 +16,7 @@ import os
 
 from .utils.documentos import generar_kardex, generar_gafete
 from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
-from .paginators import EmpleadoPagination
+from .paginators import EmpleadoPagination, PuestoPagination
 from .filters import EmpleadoFilter
 from .models import Empleado, Puesto
 
@@ -244,7 +244,7 @@ class ExportarDBView (APIView):
 class PuestoLista (ListAPIView):
     queryset = Puesto.objects.all()
     serializer_class = PuestoSerializer
-    pagination_class = EmpleadoPagination
+    pagination_class = PuestoPagination
     filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend, OrderingFilter]
     search_fields = ['nombre']
 
