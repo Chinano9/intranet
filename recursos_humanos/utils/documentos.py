@@ -36,6 +36,25 @@ def generar_kardex(datos_empleado:dict, documento:str) -> None:
             print(f"error al generar el pdf, {pisa_status.err}")
             raise Exception("Ocurrió un error al generar el PDF:", pisa_status.err)
 
+@formato_local
+def generar_contrato_det(datos_empleado:dict, documento:str) -> None:
+    
+    # Cargar la plantilla
+    template = env.get_template("contrato_determinado.html")
+
+    # Renderizar la plantilla con los datos
+    rendered_template = template.render(datos=datos_empleado)
+    
+    # Crear el archivo PDF
+    pdf_filename = "contrato_determinado.pdf"
+    with open(pdf_filename, "w+b") as pdf_file:
+        pisa_status = pisa.CreatePDF(rendered_template, dest=pdf_file)
+    
+        if not pisa_status.err:
+            print("PDF generado correctamente.")
+        else:
+            raise Exception("Ocurrió un error al generar el PDF:", pisa_status.err)
+
 
 def generar_gafete(datos_empleado:dict, documento:str) -> None:
     template = env.get_template("gafete.html")

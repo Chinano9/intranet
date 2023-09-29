@@ -5,6 +5,12 @@ from django.conf import settings
 # Create your models here.
 class Planta (models.Model):
     nombre = models.CharField(max_length=20)
+    calle = models.CharField(max_length=100)
+    numero_de_domicilio = models.CharField(max_length=10)
+    colonia = models.CharField(max_length=100)
+    ciudad = models.CharField(max_length=100)
+    estado = models.CharField(max_length=100)
+    abreviatura_estado = models.CharField(max_length=10)
     
 # TODO: DAR DE ALTA NUEVOS PUESTOS
 class Empleado (models.Model):
@@ -23,6 +29,8 @@ class Empleado (models.Model):
     num_casa = models.CharField(max_length=10)
     codigo_postal = models.CharField(max_length=5)
     jefe_directo = models.ForeignKey('self', null=True ,blank = True, on_delete=models.CASCADE)
+    planta = models.ForeignKey(Planta, null=True, blank=True, on_delete=models.CASCADE)
+    turno = models.CharField(blank=True, max_length = 40)
     # FIX: TURNO, FALTA TURNO!!!!!!!!!!!!!!!!!!!
     #casado, soltero, divorciado, etc...
     estado_civil = models.CharField(blank = True, max_length = 40)

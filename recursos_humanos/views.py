@@ -1,4 +1,5 @@
 import django_filters.rest_framework
+import datetime
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.http import HttpResponse
 from rest_framework.views import APIView
@@ -14,7 +15,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 import csv
 import os
 
-from .utils.documentos import generar_kardex, generar_gafete
+from .utils.documentos import generar_kardex, generar_gafete, generar_contrato_det
 from .serializers import EmpleadoSerializer, EmpleadoPaginadoSerializer, PuestoSerializer
 from .paginators import EmpleadoPagination, PuestoPagination
 from .filters import EmpleadoFilter
@@ -62,9 +63,21 @@ class ContratoDeterminadoView(APIView):
         documento = os.path.abspath(os.path.join(os.path.dirname(__file__),os.path.join(RUTA_DOCUMENTOS,'contrato.pdf')))
         
         empleado = self.get_object(pk)
+        puesto = empleado.puesto
+
+        datos_empleado = {
+            'ciudad': f'{empleado.planta.ciudad} {empleado.planta.abreviatura_estado}',
+            'hoy': datetime.datetime.now(),
+            'nombre_empleado': f'{empleado.nombre} {empleado.apellido_paterno} {empleado.apellido_materno}',
+            'origen_empleado': f'{empleado.ciudad_origen} {empleado.estado_origen}',
+            'contratacion': empleado.fecha_contratacion,
+            'puesto_empleado': puesto.nombre,
+            'salario_empleado':empleado.salario,
+            'salario_texto_empleado':empleado.salario_texto,
+        }
 
         try:
-            generar_kardex(empleado.__dict__, documento)
+            generar_contrato_det(datos_empleado, documento)
         except Exception as e:
             return Response({'error': f'Error al generar el contrato: {e}'}, status=500)
 

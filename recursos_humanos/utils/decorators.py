@@ -16,11 +16,13 @@ def formato_local(func):
         establecer_localizacion()
 
         # Convertir las fechas en el formato localizado (dd-mmm-aaaa)
-        for campo_fecha in ['fecha_nacimiento', 'fecha_contratacion']:
+        for campo_fecha in ['fecha_nacimiento', 'fecha_contratacion', 'hoy', 'nacimiento_empleado', 'fecha_conratacion']:
             if datos_empleado.get(campo_fecha):
-                fecha_formateada = datos_empleado[campo_fecha].strftime("%d/%b/%Y")
+                if datos_empleado.get('nacimiento_empleado'):
+                    fecha_formateada = datos_empleado[campo_fecha].strftime('%A, %d de %B de %Y')
+                else:
+                    fecha_formateada = datos_empleado[campo_fecha].strftime("%d/%b/%Y")
                 datos_empleado[campo_fecha] = fecha_formateada
-
         return func(datos_empleado, *args, **kwargs)
 
     return wrapper
