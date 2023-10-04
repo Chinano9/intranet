@@ -31,7 +31,6 @@ class Empleado (models.Model):
     jefe_directo = models.ForeignKey('self', null=True ,blank = True, on_delete=models.CASCADE)
     planta = models.ForeignKey(Planta, null=True, blank=True, on_delete=models.CASCADE)
     turno = models.CharField(blank=True, max_length = 40)
-    # FIX: TURNO, FALTA TURNO!!!!!!!!!!!!!!!!!!!
     #casado, soltero, divorciado, etc...
     estado_civil = models.CharField(blank = True, max_length = 40)
     email = models.CharField(max_length=100)

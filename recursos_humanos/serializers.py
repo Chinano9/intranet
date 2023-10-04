@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import Empleado, Puesto
+from .models import Empleado, Puesto, Planta
 from django.utils.timezone import now
 
 class PuestoSerializer (serializers.ModelSerializer):
     class Meta:
         model = Puesto
+        fields = '__all__'
+
+class PlantaSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Planta
         fields = '__all__'
 
 class EmpleadoSerializer (serializers.ModelSerializer):
